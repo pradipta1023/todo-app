@@ -1,4 +1,4 @@
-import { handleUser } from "./src/server/anonymous.js";
+import { handleUser } from "./src/server/requestHandler.js";
 
 const main = () => {
   Deno.serve({
