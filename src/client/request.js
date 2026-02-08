@@ -10,4 +10,4 @@ const repsonse = await fetch("http://localhost:8000/reg", {
 
 const jsonResponse = await repsonse.json();
 
-console.log({ repsonse, jsonResponse });
+console.log({ jsonResponse });

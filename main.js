@@ -1,10 +1,14 @@
 import { handleUser } from "./src/server/requestHandler.js";
+import { DatabaseSync } from "node:sqlite";
+import * as storageFns from "./src/db/db.js";
 
 const main = () => {
+  const storage = new DatabaseSync("./storage/app.db");
+  storageFns.init(storage);
   Deno.serve({
     port: 8000,
     onListen: (p) => console.log(`Listening from : ${p.port}`),
-  }, (request) => handleUser(request));
+  }, (request) => handleUser(request, { storage, storageFns }));
 };
 
 main();
