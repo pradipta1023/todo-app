@@ -1,4 +1,4 @@
-import { handleUser } from "./src/server/requestHandler.js";
+import { handleUser } from "./src/server/request_handler.js";
 import { DatabaseSync } from "node:sqlite";
 import * as storageFns from "./src/db/db.js";
 

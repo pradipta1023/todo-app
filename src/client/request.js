@@ -1,32 +1,28 @@
-// const details = { name: "Dummy", password: "dummy1234" };
+export const addUser = async (details) => {
+  const repsonse = await fetch("http://localhost:8000/reg", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(details),
+  });
 
-// const repsonse = await fetch("http://localhost:8000/reg", {
-//   method: "POST",
-//   headers: {
-//     "content-type": "application/json",
-//   },
-//   body: JSON.stringify(details),
-// });
+  const jsonResponse = await repsonse.json();
+  return { body: jsonResponse, status: response.status };
+};
 
-// const jsonResponse = await repsonse.json();
+export const login = async (details) => {
+  const response = await fetch("http://localhost:8000/login", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(details),
+  });
 
-// console.log({ jsonResponse });
+  if (response.status === 200) {
+    return { body: await response.json(), status: response.status };
+  }
 
-const details = { id: 5, password: "dummy1234" };
-
-const response = await fetch("http://localhost:8000/login", {
-  method: "POST",
-  headers: {
-    "content-type": "application/json",
-  },
-  body: JSON.stringify(details),
-});
-
-if (response.status === 200) {
-  const jsonResponse = await response.json();
-  console.log({ jsonResponse });
-}
-const textResponse = await response.text();
-console.log({ textResponse });
-
-const ;
+  return { body: await response.text(), status: response.status };
+};

@@ -1,4 +1,4 @@
-import { handleSignIn, handleSignUp } from "./userController.js";
+import { handleSignIn, handleSignUp } from "./user_controller.js";
 
 export const handleUser = async (request, { storage, storageFns }) => {
   const path = new URL(request.url).pathname;
