@@ -1,5 +1,5 @@
 export const addUser = async (details) => {
-  const repsonse = await fetch("http://localhost:8000/reg", {
+  const response = await fetch("http://localhost:8000/reg", {
     method: "POST",
     headers: {
       "content-type": "application/json",
@@ -7,7 +7,7 @@ export const addUser = async (details) => {
     body: JSON.stringify(details),
   });
 
-  const jsonResponse = await repsonse.json();
+  const jsonResponse = await response.json();
   return { body: jsonResponse, status: response.status };
 };
 
@@ -25,4 +25,18 @@ export const login = async (details) => {
   }
 
   return { body: await response.text(), status: response.status };
+};
+
+export const addTodo = async (details) => {
+  const d = { name: "todo1", hasDone: false, user_id: details.user_id };
+  const repsonse = await fetch("http://localhost:8000/todo/create", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(d),
+  });
+
+  const body = await repsonse.text();
+  console.log(body);
 };

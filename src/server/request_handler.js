@@ -1,3 +1,4 @@
+import { handleAddTodo } from "./todo_controller.js";
 import { handleSignIn, handleSignUp } from "./user_controller.js";
 
 export const handleUser = async (request, { storage, storageFns }) => {
@@ -12,6 +13,11 @@ export const handleUser = async (request, { storage, storageFns }) => {
   if (path === "/login" && request.method === "POST") {
     const userDetails = await request.json();
     return await handleSignIn(userDetails, { storage, storageFns });
+  }
+
+  if (path === "/todo/create" && request.method === "POST") {
+    const todoDetails = await request.json();
+    return handleAddTodo(todoDetails, { storage, storageFns });
   }
 
   return new Response("Not Found", {

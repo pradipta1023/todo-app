@@ -1,5 +1,5 @@
 import { input, number, password, select } from "@inquirer/prompts";
-import { userSignUp } from "../operations/user_operations.js";
+import { existingAccount, userSignUp } from "../operations/user_operations.js";
 
 export const detailsForSignUp = async () => {
   const user = {};
