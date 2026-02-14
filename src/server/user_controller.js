@@ -9,9 +9,9 @@ export const handleSignUp = (details, { storage, storageFns }) => {
 };
 
 export const handleSignIn = (details, { storage, storageFns }) => {
-  const user = storageFns.signIn(storage, details);
-  if (!user) {
-    return new Response("User not found", {
+  const response = storageFns.signIn(storage, details);
+  if (response.isError) {
+    return new Response(response.body, {
       headers: {
         "content-type": "text/plain",
       },
@@ -19,7 +19,7 @@ export const handleSignIn = (details, { storage, storageFns }) => {
     });
   }
 
-  return new Response(JSON.stringify(user), {
+  return new Response(JSON.stringify(response.body), {
     headers: {
       "content-type": "application/json",
     },

@@ -1,7 +1,15 @@
 import { DatabaseSync } from "node:sqlite";
 import { describe, it } from "node:test";
-import { addTodo, init, signIn, signUp } from "../../src/db/db.js";
+import {
+  addTodo,
+  deleteTodo,
+  getTodos,
+  init,
+  signIn,
+  signUp,
+} from "../../src/db/db.js";
 import { assertEquals } from "@std/assert";
+import { password } from "@inquirer/prompts";
 
 describe("Testing db", () => {
   const db = new DatabaseSync(":memory:");
@@ -20,23 +28,76 @@ describe("Testing db", () => {
 
   it("signIn function should return user object if found", () => {
     const user = signIn(db, { id: 1, password: "dummy1234" });
-    assertEquals(user, { user_id: 1, name: "Dummy", password: "dummy1234" });
+    assertEquals(user.body, {
+      user_id: 1,
+      name: "Dummy",
+      password: "dummy1234",
+    });
   });
 
-  it("signIn function should return undefined if password or id doesn't match", () => {
+  it("signIn function should return Invalid password if password doesn't match", () => {
     const user = signIn(db, { id: 1, password: "dummy123" });
-    assertEquals(user, undefined);
+    assertEquals(user.body, "Invalid password");
+  });
+
+  it("signIn function should return invalid user id id doesn't match", () => {
+    const user = signIn(db, { id: 7, password: "dummy123" });
+    assertEquals(user.body, "Invalid user id");
   });
 
   it("addTodo function should return todo_id and todo name after adding todo", () => {
-    const response = addTodo(db, { user_id: 1, name: "dummyTodo" });
-    assertEquals(response.message, { "todo id": 1, name: "dummyTodo" });
+    const response = addTodo(db, {
+      user_id: 1,
+      name: "dummyTodo",
+      description: "aaa",
+    });
+    assertEquals(response.body, {
+      "todo id": 1,
+      name: "dummyTodo",
+    });
     assertEquals(response.isError, false);
   });
 
-  it("addTodo function should return", () => {
-    const response = addTodo(db, { user_id: 5, name: "dummyTodo" });
-    assertEquals(response.message, "5 is not a valid user id");
+  it("addTodo function should return not valid user if there is no todo against that user", () => {
+    const response = addTodo(db, {
+      user_id: 5,
+      name: "dummyTodo",
+      description: "aaa",
+    });
+    assertEquals(response.body, "5 is not a valid user id");
     assertEquals(response.isError, true);
+  });
+
+  it("getTodo function should take user id and return all the todos related to that user id", () => {
+    const response = getTodos(db, { user_id: 1 });
+    assertEquals(response.body, {
+      has_done: 0,
+      name: "dummyTodo",
+      description: "aaa",
+      todo_id: 1,
+      user_id: 1,
+    });
+  });
+
+  it("getTodo function should take user_id and return user_id not found if user_id is not present", () => {
+    const response = getTodos(db, { user_id: 5 });
+    assertEquals(response, { isError: true, body: "No todos found" });
+  });
+
+  it("deleteTodo function should take user_id and todo_id as arguments and will delete that todo", () => {
+    const response = deleteTodo(db, { user_id: 1, todo_id: 1 });
+    assertEquals(response.body, {
+      has_done: 0,
+      name: "dummyTodo",
+      description: "aaa",
+      todo_id: 1,
+      user_id: 1,
+    });
+  });
+
+  it("deleteTodo function should take user_id and todo_id as input and will return isError true if anyone of both not found", () => {
+    const response = deleteTodo(db, { user_id: 1, todo_id: 1 });
+    assertEquals(response.isError, true);
+    assertEquals(response.body, "Invalid user id or todo id");
   });
 });

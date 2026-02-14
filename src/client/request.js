@@ -28,15 +28,33 @@ export const login = async (details) => {
 };
 
 export const addTodo = async (details) => {
-  const d = { name: "todo1", hasDone: false, user_id: details.user_id };
-  const repsonse = await fetch("http://localhost:8000/todo/create", {
+  const response = await fetch("http://localhost:8000/todo/create", {
     method: "POST",
     headers: {
       "content-type": "application/json",
     },
-    body: JSON.stringify(d),
+    body: JSON.stringify(details),
   });
 
-  const body = await repsonse.text();
-  console.log(body);
+  if (response.status === 200) {
+    return { body: await response.json(), status: response.status };
+  }
+
+  return { body: await response.text(), status: response.status };
+};
+
+export const getTodos = async (details) => {
+  const response = await fetch("http://localhost:8000/todo/get", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(details),
+  });
+
+  if (response.status === 200) {
+    return { body: await response.json(), status: response.status };
+  }
+
+  return { body: await response.text(), status: response.status };
 };
